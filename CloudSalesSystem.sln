@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudSalesSystem", "CloudSalesSystem\CloudSalesSystem.csproj", "{FD6D8FFC-0137-4DB4-9672-015D41A37570}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudSalesSystemTests", "CloudSalesSystemTests\CloudSalesSystemTests.csproj", "{F424B00E-4837-417F-A846-FEE3F713C0E2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FD6D8FFC-0137-4DB4-9672-015D41A37570}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD6D8FFC-0137-4DB4-9672-015D41A37570}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD6D8FFC-0137-4DB4-9672-015D41A37570}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD6D8FFC-0137-4DB4-9672-015D41A37570}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F424B00E-4837-417F-A846-FEE3F713C0E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F424B00E-4837-417F-A846-FEE3F713C0E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F424B00E-4837-417F-A846-FEE3F713C0E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F424B00E-4837-417F-A846-FEE3F713C0E2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A95BD258-EABB-4BA6-BF89-5020A05D230B}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,6 @@
+@CloudSalesSystem_HostAddress = http://localhost:5047
+
+GET {{CloudSalesSystem_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
