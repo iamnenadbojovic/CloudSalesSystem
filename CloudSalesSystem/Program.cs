@@ -1,6 +1,8 @@
 using CloudSalesSystem.DBContext;
 using CloudSalesSystem.HelperClasses;
 using CloudSalesSystem.Interfaces;
+using CloudSalesSystem.Middleware;
+using CloudSalesSystem.Models;
 using CloudSalesSystem.Services.CCPService;
 using CloudSalesSystem.Services.LoginService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -14,6 +16,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddMockHttpClient();
 var connectionString = builder.Configuration.GetConnectionString("CloudSalesSytem");
+builder.Services.AddTransient<ICredentials, Credentials>();
+
+
 builder.Services.AddDbContext<CloudSalesSystemDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<ICCPService, CCPService>();
@@ -25,7 +30,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c => {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "JWTToken_Auth_API",
+        Title = "CloudSalesSytem",
         Version = "v1"
     });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
@@ -80,7 +85,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseMiddleware<AuthenticationMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();
