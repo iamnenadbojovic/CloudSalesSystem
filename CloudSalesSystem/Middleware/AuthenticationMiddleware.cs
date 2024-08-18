@@ -1,9 +1,4 @@
-﻿using CloudSalesSystem.Models;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net;
-using System.Reflection.PortableExecutable;
-using System.Security.Claims;
-using System.Text;
+﻿using System.IdentityModel.Tokens.Jwt;
 
 namespace CloudSalesSystem.Middleware;
 public class AuthenticationMiddleware(RequestDelegate next, CloudSalesSystem.Interfaces.ICredentials credentials)
@@ -17,7 +12,7 @@ public class AuthenticationMiddleware(RequestDelegate next, CloudSalesSystem.Int
         if (authHeader != null)
         {        
             int startPoint = authHeader.IndexOf(".") + 1;
-
+            // update this
             var tokenText = authHeader.Substring(authHeader.IndexOf("Bearer ")+7);
 
             var handler = new JwtSecurityTokenHandler();
