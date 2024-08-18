@@ -14,26 +14,41 @@ namespace CloudSalesSystem.Services.CCPService
         CloudSalesSystemDbContext cloudSalesSystemDbContext, 
         IHttpClientFactory httpClientFactory) : ICCPService
     {
-        public async Task<string[]> SoftwareServices()
+        public async Task<CCPSoftware[]> SoftwareServices()
         {
             var client = httpClientFactory.CreateClient("FakeData");
-            var softwareServices = await client.GetFromJsonAsync<string[]>(
+            var softwareServices = await client.GetFromJsonAsync<CCPSoftware[]>(
                 "https://www.ccp.org/products/list",
                 new JsonSerializerOptions(JsonSerializerDefaults.Web)
                 );
             return softwareServices;
         }
 
-        public async Task<HttpResponseMessage> OrderSoftware(Guid accountId, Software softwareService)
+        public async Task<HttpResponseMessage> OrderSoftware(Guid accountId, int softwareId)
         {
+            var services  = await SoftwareServices();
+            var softwareCheck = services.FirstOrDefault(a => a.Id == softwareId);
+            if(softwareCheck== null)
+            {
+                return null;
+            }
             var client = httpClientFactory.CreateClient("FakeData");
             using StringContent json = new(
-               JsonSerializer.Serialize(new { accountId, softwareService }, new JsonSerializerOptions(JsonSerializerDefaults.Web)),
+               JsonSerializer.Serialize(new { accountId}, new JsonSerializerOptions(JsonSerializerDefaults.Web)),
                Encoding.UTF8,
                MediaTypeNames.Application.Json);
-            var httpResponse = await client.PostAsync("/api/items", json);
-            var accountEntry = await cloudSalesSystemDbContext.Accounts.SingleAsync(a => a.Customer.Id == accountId);
-            accountEntry.SoftwareEntries.Add(softwareService);
+            // ovo treba u header
+            var httpResponse = await client.PostAsync($"https://www.css.org/services/{softwareId}/purchase", json);
+            string msg = await httpResponse.Content.ReadAsStringAsync();
+            var softwarePurchaseResponse = JsonSerializer.Deserialize<SoftwarePurchaseResponse>(msg);
+            var accountEntry = await cloudSalesSystemDbContext.Accounts.FirstOrDefaultAsync(a => a.Id == accountId);
+            var softwareEntry = new Software()
+            {
+                Name = softwareCheck.Name,
+                Quantity = 1,
+                ValidToDate = softwarePurchaseResponse.Expiry,
+            };
+            accountEntry.SoftwareEntries.Add(softwareEntry);
             await cloudSalesSystemDbContext.SaveChangesAsync();
             return httpResponse;
         }

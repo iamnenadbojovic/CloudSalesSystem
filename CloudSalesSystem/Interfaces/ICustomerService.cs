@@ -4,7 +4,7 @@ namespace CloudSalesSystem.Interfaces
 {
     public interface ICustomerService
     {
-        Task<bool> CancelSoftware(Guid softwareId);
+        Task<bool> CancelSubscription(Guid softwareId);
         Task<List<Account>> CustomerAccounts(Guid customerId);
         Task<bool> ExtendSoftwareLicence(Guid softwareId, int days);
         Task<List<Software>> PurchasedSoftware(Guid accountId);

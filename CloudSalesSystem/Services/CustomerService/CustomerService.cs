@@ -8,21 +8,21 @@ namespace CloudSalesSystem.Services.CCPService
 
     public class CustomerService(CloudSalesSystemDbContext cloudSalesSystemDbContext) : ICustomerService
     {
-        public Task<List<Account>> CustomerAccounts(Guid customerId)
+        public async Task<List<Account>> CustomerAccounts(Guid customerId)
         {
-            var result = cloudSalesSystemDbContext.Accounts.Where(a => a.Customer.Id == customerId).ToListAsync();
+            var result = await cloudSalesSystemDbContext.Accounts.Where(a => a.Customer.Id == customerId).ToListAsync();
             return result;
         }
 
         public async Task<List<Software>> PurchasedSoftware(Guid accountId)
         {
-            var result = await cloudSalesSystemDbContext.Softwares.Where(a => a.AccountId.Id == accountId).ToListAsync();
+            var result = await cloudSalesSystemDbContext.Softwares.Where(a => a.Account.Id == accountId).ToListAsync();
             return result;
         }
 
         public async Task<bool> UpdateLicenceQuantity(Guid softwareId, int quantity)
         {
-            var softwareEntity = await cloudSalesSystemDbContext.Softwares.SingleAsync(a => a.Id == softwareId);
+            var softwareEntity = await cloudSalesSystemDbContext.Softwares.FirstOrDefaultAsync(a => a.Id == softwareId);
             if (softwareEntity == null)
             {
                 return false;
@@ -34,9 +34,9 @@ namespace CloudSalesSystem.Services.CCPService
             return true;
         }
 
-        public async Task<bool> CancelSoftware(Guid softwareId)
+        public async Task<bool> CancelSubscription(Guid softwareId)
         {
-            var softwareEntity = await cloudSalesSystemDbContext.Softwares.SingleAsync(a => a.Id == softwareId);
+            var softwareEntity = await cloudSalesSystemDbContext.Softwares.FirstOrDefaultAsync(a => a.Id == softwareId);
             if (softwareEntity == null)
             {
                 return false;
@@ -50,12 +50,12 @@ namespace CloudSalesSystem.Services.CCPService
 
         public async Task<bool> ExtendSoftwareLicence(Guid softwareId, int days)
         {
-            var softwareEntity = await cloudSalesSystemDbContext.Softwares.SingleAsync(a => a.Id == softwareId);
+            var softwareEntity = await cloudSalesSystemDbContext.Softwares.FirstOrDefaultAsync(a => a.Id == softwareId);
             if (softwareEntity == null)
             {
                 return false;
             }
-            softwareEntity.ValidateToDate = softwareEntity.ValidateToDate.AddDays(days);
+            softwareEntity.ValidToDate = softwareEntity.ValidToDate.AddDays(days);
 
             await cloudSalesSystemDbContext.SaveChangesAsync();
 
