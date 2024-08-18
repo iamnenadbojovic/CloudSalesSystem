@@ -1,6 +1,6 @@
 ﻿using CloudSalesSystem.Models;
 
-namespace CloudSalesSystem.Interfaces
+namespace CloudSalesSystem.Services.CCPService
 {
     public interface ICustomerService
     {
