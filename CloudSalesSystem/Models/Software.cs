@@ -7,6 +7,6 @@
         public required int Quantity { get; set; }
         public required string State { get; set; } = "Active";
         public required DateTime ValidateToDate { get; set; }
-        public required Account AccountEntry { get; set; }
+        public required Account AccountId{ get; set; }
     }
 }

@@ -1,5 +1,7 @@
 using CloudSalesSystem.DBContext;
 using CloudSalesSystem.HelperClasses;
+using CloudSalesSystem.Interfaces;
+using CloudSalesSystem.Services.CCPService;
 using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMockHttpClient();
 var connectionString = builder.Configuration.GetConnectionString("CloudSalesSytem");
 builder.Services.AddDbContext<CloudSalesSystemDbContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddScoped<ICCPService, CCPService>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

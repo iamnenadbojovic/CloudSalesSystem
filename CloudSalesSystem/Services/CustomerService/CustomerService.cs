@@ -1,25 +1,26 @@
 ﻿using CloudSalesSystem.DBContext;
+using CloudSalesSystem.Interfaces;
 using CloudSalesSystem.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace CloudSalesSystem.Services.CCPService
 {
 
-    public class CustomerService(CloudSalesSystemDbContext cloudSalesSystemDbContext)
+    public class CustomerService(CloudSalesSystemDbContext cloudSalesSystemDbContext) : ICustomerService
     {
         public Task<List<Account>> CustomerAccounts(Guid customerId)
         {
-            var result = cloudSalesSystemDbContext.Accounts.Where(a => a.CustomerEntry.Id == customerId).ToListAsync();
+            var result = cloudSalesSystemDbContext.Accounts.Where(a => a.Customer.Id == customerId).ToListAsync();
             return result;
         }
 
         public async Task<List<Software>> PurchasedSoftware(Guid accountId)
         {
-            var result = await cloudSalesSystemDbContext.Softwares.Where(a => a.AccountEntry.Id == accountId).ToListAsync();
+            var result = await cloudSalesSystemDbContext.Softwares.Where(a => a.AccountId.Id == accountId).ToListAsync();
             return result;
         }
 
-        public async Task<bool> UpdateLicenceQuantity(Guid softwareId, int quantity )
+        public async Task<bool> UpdateLicenceQuantity(Guid softwareId, int quantity)
         {
             var softwareEntity = await cloudSalesSystemDbContext.Softwares.SingleAsync(a => a.Id == softwareId);
             if (softwareEntity == null)
@@ -61,5 +62,4 @@ namespace CloudSalesSystem.Services.CCPService
             return true;
         }
     }
-
 }

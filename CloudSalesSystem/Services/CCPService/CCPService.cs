@@ -1,9 +1,8 @@
 ﻿using Castle.Core.Resource;
 using CloudSalesSystem.DBContext;
+using CloudSalesSystem.Interfaces;
 using CloudSalesSystem.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Net.Http;
-using System.Net.Http.Json;
 using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
@@ -11,13 +10,15 @@ using System.Text.Json;
 namespace CloudSalesSystem.Services.CCPService
 {
 
-    public class CCPService(CloudSalesSystemDbContext cloudSalesSystemDbContext, IHttpClientFactory httpClientFactory)
+    public class CCPService(
+        CloudSalesSystemDbContext cloudSalesSystemDbContext, 
+        IHttpClientFactory httpClientFactory) : ICCPService
     {
         public async Task<string[]> SoftwareServices()
         {
             var client = httpClientFactory.CreateClient("FakeData");
             var softwareServices = await client.GetFromJsonAsync<string[]>(
-                "www.ccp.org/products/list",
+                "https://www.ccp.org/products/list",
                 new JsonSerializerOptions(JsonSerializerDefaults.Web)
                 );
             return softwareServices;
@@ -31,7 +32,7 @@ namespace CloudSalesSystem.Services.CCPService
                Encoding.UTF8,
                MediaTypeNames.Application.Json);
             var httpResponse = await client.PostAsync("/api/items", json);
-            var accountEntry = await cloudSalesSystemDbContext.Accounts.SingleAsync(a => a.CustomerEntry.Id == accountId);
+            var accountEntry = await cloudSalesSystemDbContext.Accounts.SingleAsync(a => a.Customer.Id == accountId);
             accountEntry.SoftwareEntries.Add(softwareService);
             await cloudSalesSystemDbContext.SaveChangesAsync();
             return httpResponse;

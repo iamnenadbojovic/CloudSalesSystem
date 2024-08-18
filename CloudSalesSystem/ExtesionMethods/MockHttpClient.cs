@@ -15,7 +15,7 @@ namespace CloudSalesSystem.HelperClasses
 
             handlerMock.Protected().Setup<Task<HttpResponseMessage>>(
             "SendAsync",
-            ItExpr.Is<HttpRequestMessage>(x => x.RequestUri == new Uri("www.css.org/services")),
+            ItExpr.Is<HttpRequestMessage>(x => x.RequestUri == new Uri("https://www.ccp.org/products/list")),
             ItExpr.IsAny<CancellationToken>()
         )
         .ReturnsAsync(new HttpResponseMessage()
@@ -23,19 +23,20 @@ namespace CloudSalesSystem.HelperClasses
             StatusCode = HttpStatusCode.OK,
             Content = new StringContent(JsonSerializer.Serialize(response))
         });
-            foreach (var item in response)
+           foreach (var item in response)
             {
-                var uriString = $"www.css.org/services/{item}/purchase";
+                var formattedText = item.Replace(" ", "");
+                var uriString = $"https://www.css.org/services/{formattedText}/purchase";
                 handlerMock.Protected().Setup<Task<HttpResponseMessage>>(
             "SendAsync",
             ItExpr.Is<HttpRequestMessage>(x => x.RequestUri == new Uri(uriString)),
             ItExpr.IsAny<CancellationToken>()
-        )
-        .ReturnsAsync(new HttpResponseMessage()
-        {
-            StatusCode = HttpStatusCode.OK,
-            Content = new StringContent("Licence Purchased")
-        });
+             )
+                .ReturnsAsync(new HttpResponseMessage()
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Content = new StringContent("Licence Purchased")
+                });
             }
 
             services.AddHttpClient("FakeData").ConfigurePrimaryHttpMessageHandler(() => handlerMock.Object);
