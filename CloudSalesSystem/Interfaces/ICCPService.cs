@@ -5,6 +5,6 @@ namespace CloudSalesSystem.Interfaces
     public interface ICCPService
     {
         Task<CCPSoftware[]> SoftwareServices();
-        Task<HttpResponseMessage> OrderSoftware(Guid accountId, int serviceId);
+        Task<HttpResponseMessage> OrderSoftware(Guid accountId, int softwareId);
     }
 }

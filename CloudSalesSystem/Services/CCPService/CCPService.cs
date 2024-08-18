@@ -1,5 +1,4 @@
-﻿using Castle.Core.Resource;
-using CloudSalesSystem.DBContext;
+﻿using CloudSalesSystem.DBContext;
 using CloudSalesSystem.Interfaces;
 using CloudSalesSystem.Models;
 using Microsoft.EntityFrameworkCore;

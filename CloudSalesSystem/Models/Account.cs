@@ -8,6 +8,7 @@ namespace CloudSalesSystem.Models
         public required string Name { get; set; }
         public required string CCPAccountId { get; set; }
         public required DateTime Created { get; set; }
+        [JsonIgnore]
         public required Customer Customer { get; set; }
 
         [JsonIgnore]

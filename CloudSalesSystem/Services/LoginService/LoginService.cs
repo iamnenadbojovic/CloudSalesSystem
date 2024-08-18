@@ -34,7 +34,7 @@ namespace CloudSalesSystem.Services.LoginService
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new(ClaimTypes.Name, credentials.Username)
+                    new(ClaimTypes.NameIdentifier, loginCustomer.Id.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(30),
                 SigningCredentials = new SigningCredentials(

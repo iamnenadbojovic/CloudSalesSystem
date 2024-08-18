@@ -18,11 +18,12 @@ public class AuthenticationMiddleware(RequestDelegate next, CloudSalesSystem.Int
         {        
             int startPoint = authHeader.IndexOf(".") + 1;
 
-            var tokenText = authHeader.Substring(authHeader.IndexOf("bearer ")+7);
+            var tokenText = authHeader.Substring(authHeader.IndexOf("Bearer ")+7);
 
             var handler = new JwtSecurityTokenHandler();
             var token = handler.ReadJwtToken(tokenText);
-            context.Items["Name"] = token.Claims.First(claim => claim.Type == "unique_name").Value;
+
+            context.Items["CustomerId"] = token.Claims.First(claim => claim.Type == "nameid").Value;
         }
         //Pass to the next middleware
         await next(context);

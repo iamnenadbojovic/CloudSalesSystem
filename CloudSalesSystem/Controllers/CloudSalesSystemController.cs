@@ -3,10 +3,6 @@ using CloudSalesSystem.Models;
 using CloudSalesSystem.Services.CCPService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
 
 namespace CloudSalesSystem.Controllers
 {
@@ -43,11 +39,12 @@ namespace CloudSalesSystem.Controllers
         [Authorize]
         [HttpGet]
         [Route("accountList")]
-        public async Task<string[]> AccountsList(Guid customerId)
+        public async Task<List<Account>> AccountsList()
         {
+            var customerId =new Guid(HttpContext.Items["CustomerId"].ToString());
             var accountsEntriesList = await customerService.CustomerAccounts(customerId);
-            var result = accountsEntriesList.Select(x => x.Name).ToArray();
-            return result;
+     
+            return accountsEntriesList;
         }
 
         [Authorize]
@@ -55,7 +52,7 @@ namespace CloudSalesSystem.Controllers
         [Route("OrderService")]
         public async Task<HttpResponseMessage> OrderService(Guid accountId, int softwareId)
         {
-            var name = HttpContext.Items["Name"];
+            var customerId = new Guid(HttpContext.Items["CustomerId"].ToString());
             var response = await ccpService.OrderSoftware(accountId, softwareId);
             return response;
         }
@@ -65,7 +62,7 @@ namespace CloudSalesSystem.Controllers
         [Route("PurchasedSoftware")]
         public async Task<List<Software>> PurchasedSoftware(Guid accountId)
         {
-            var name = HttpContext.Items["Name"];
+            var customerId = new Guid(HttpContext.Items["CustomerId"].ToString());
             var response = await customerService.PurchasedSoftware(accountId);
             return response;
         }
@@ -75,7 +72,7 @@ namespace CloudSalesSystem.Controllers
         [Route("UpdateQuantity")]
         public async Task<bool> UpdateQuantity(Guid softwareId, int quantity)
         {
-            var name = HttpContext.Items["Name"];
+            var customerId = new Guid(HttpContext.Items["CustomerId"].ToString());
             var response = await customerService.UpdateLicenceQuantity(softwareId, quantity);
             return response;
         }
@@ -85,7 +82,7 @@ namespace CloudSalesSystem.Controllers
         [Route("CancelSubscription")]
         public async Task<bool> CancelAccount(Guid softwareId)
         {
-            var name = HttpContext.Items["Name"];
+            var customerId = new Guid(HttpContext.Items["CustomerId"].ToString());
             var response = await customerService.CancelSubscription(softwareId);
             return response;
         }
@@ -95,7 +92,7 @@ namespace CloudSalesSystem.Controllers
         [Route("ExtendLicence")]
         public async Task<bool> ExtendLicence(Guid softwareId, int months)
         {
-            var name = HttpContext.Items["Name"];
+            var customerId = new Guid(HttpContext.Items["CustomerId"].ToString());
             var response = await customerService.ExtendSoftwareLicence(softwareId, months);
             return response;
         }
