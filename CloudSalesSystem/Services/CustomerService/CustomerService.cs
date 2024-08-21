@@ -16,14 +16,17 @@ namespace CloudSalesSystem.Services.CCPService
         public async Task<List<Software>> PurchasedSoftware(Guid customerId, Guid accountId)
         {
             var result = await cloudSalesSystemDbContext.Softwares.Where(
-                a => a.Account.Id == accountId && 
-                a.Account.Customer.Id== customerId).ToListAsync();
+                a => a.Account.Id == accountId &&
+                a.Account.Customer.Id == customerId).ToListAsync();
             return result;
         }
 
-        public async Task<bool> UpdateLicenceQuantity(Guid softwareId, int quantity)
+        public async Task<bool> UpdateLicenceQuantity(Guid customerId, Guid softwareId, int quantity)
         {
-            var softwareEntity = await cloudSalesSystemDbContext.Softwares.FirstOrDefaultAsync(a => a.Id == softwareId);
+            var softwareEntity = await cloudSalesSystemDbContext.Softwares.FirstOrDefaultAsync(
+                a => a.Id == softwareId &&
+                a.Account.Customer.Id == customerId);
+
             if (softwareEntity == null)
             {
                 return false;
@@ -35,9 +38,11 @@ namespace CloudSalesSystem.Services.CCPService
             return true;
         }
 
-        public async Task<bool> CancelSubscription(Guid softwareId)
+        public async Task<bool> CancelSubscription(Guid customerId, Guid softwareId)
         {
-            var softwareEntity = await cloudSalesSystemDbContext.Softwares.FirstOrDefaultAsync(a => a.Id == softwareId);
+            var softwareEntity = await cloudSalesSystemDbContext.Softwares.FirstOrDefaultAsync(
+            a => a.Id == softwareId &&
+                a.Account.Customer.Id == customerId);
             if (softwareEntity == null)
             {
                 return false;
@@ -49,9 +54,11 @@ namespace CloudSalesSystem.Services.CCPService
             return true;
         }
 
-        public async Task<bool> ExtendSoftwareLicence(Guid softwareId, int days)
+        public async Task<bool> ExtendSoftwareLicence(Guid customerId, Guid softwareId, int days)
         {
-            var softwareEntity = await cloudSalesSystemDbContext.Softwares.FirstOrDefaultAsync(a => a.Id == softwareId);
+            var softwareEntity = await cloudSalesSystemDbContext.Softwares.FirstOrDefaultAsync(
+            a => a.Id == softwareId &&
+                a.Account.Customer.Id == customerId);
             if (softwareEntity == null)
             {
                 return false;

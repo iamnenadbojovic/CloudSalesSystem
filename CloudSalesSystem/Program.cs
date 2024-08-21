@@ -1,8 +1,6 @@
 using CloudSalesSystem.DBContext;
 using CloudSalesSystem.HelperClasses;
 using CloudSalesSystem.Interfaces;
-using CloudSalesSystem.Middleware;
-using CloudSalesSystem.Models;
 using CloudSalesSystem.Services.CCPService;
 using CloudSalesSystem.Services.CurrentCustomerService;
 using CloudSalesSystem.Services.LoginService;
@@ -25,7 +23,10 @@ builder.Services.AddScoped<ICCPService, CCPService>();
 builder.Services.AddHttpContextAccessor();
 
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
+});
 builder.Services.AddTransient<ICurrentCustomerService, CurrentCustomerService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -88,7 +89,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseMiddleware<AuthenticationMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();

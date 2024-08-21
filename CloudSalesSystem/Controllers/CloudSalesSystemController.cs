@@ -63,8 +63,7 @@ namespace CloudSalesSystem.Controllers
         [Route("PurchasedSoftware")]
         public async Task<List<Software>> PurchasedSoftware(Guid accountId)
         {
-            var contextCustomerId = HttpContext.Items.FirstOrDefault(a => a.Key.ToString() == "CustomerId").Value!;
-            var customerId = new Guid(contextCustomerId.ToString());
+            var customerId = currentCustomerService.CustomerId();
             var response = await customerService.PurchasedSoftware(customerId, accountId);
             return response;
         }
@@ -74,8 +73,8 @@ namespace CloudSalesSystem.Controllers
         [Route("UpdateQuantity")]
         public async Task<bool> UpdateQuantity(Guid softwareId, int quantity)
         {
-            var sessionCustomerId = HttpContext.Session.GetString("CustomerId");
-            var response = await customerService.UpdateLicenceQuantity(softwareId, quantity);
+            var customerId = currentCustomerService.CustomerId();
+            var response = await customerService.UpdateLicenceQuantity(customerId, softwareId, quantity);
             return response;
         }
 
@@ -83,8 +82,9 @@ namespace CloudSalesSystem.Controllers
         [HttpPut]
         [Route("CancelSubscription")]
         public async Task<ActionResult> CancelAccount(Guid softwareId)
-        {  
-            var isSucceessfull = await customerService.CancelSubscription(softwareId);        
+        {
+            var customerId = currentCustomerService.CustomerId();
+            var isSucceessfull = await customerService.CancelSubscription(customerId, softwareId);        
             return isSucceessfull ? Ok() : StatusCode(405);
         }
 
@@ -93,7 +93,8 @@ namespace CloudSalesSystem.Controllers
         [Route("ExtendLicence")]
         public async Task<ActionResult> ExtendLicence(Guid softwareId, int months)
         {
-            var isSuccessful = await customerService.ExtendSoftwareLicence(softwareId, months);
+            var customerId = currentCustomerService.CustomerId();
+            var isSuccessful = await customerService.ExtendSoftwareLicence(customerId, softwareId, months);
             return isSuccessful ? Ok() : StatusCode(405);
         }
     }
