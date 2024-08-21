@@ -11,9 +11,10 @@ namespace CloudSalesSystem.Controllers
     public class CloudSalesSystemController(
         ILogger<CloudSalesSystemController> logger,
         ILoginService loginService,
-        ICCPService ccpService, 
+        ICCPService ccpService,
+        ICurrentCustomerService currentCustomerService,
         ICustomerService customerService) : ControllerBase
-    {
+        {
 
         [HttpPost("Login")]
         [AllowAnonymous]
@@ -22,7 +23,7 @@ namespace CloudSalesSystem.Controllers
             var token = await loginService.Login(credentials);
             if (token == null || token == string.Empty)
             {
-                return BadRequest(new { message = "UserName or Password is incorrect" });
+                return BadRequest(new { message = "Username or Password is incorrect" });
             }
             return Ok(token);
         }
@@ -39,22 +40,22 @@ namespace CloudSalesSystem.Controllers
         [Authorize]
         [HttpGet]
         [Route("accountList")]
-        public async Task<List<Account>> AccountsList()
+        public async Task<ActionResult> AccountsList()
         {
-            var customerId =new Guid(HttpContext.Items["CustomerId"].ToString());
+            var customerId = currentCustomerService.CustomerId();
             var accountsEntriesList = await customerService.CustomerAccounts(customerId);
      
-            return accountsEntriesList;
+            return Ok(accountsEntriesList);
         }
 
         [Authorize]
         [HttpPost]
         [Route("OrderService")]
-        public async Task<HttpResponseMessage> OrderService(Guid accountId, int softwareId)
+        public async Task<ActionResult> OrderService(Guid accountId, int softwareId)
         {
-            var customerId = new Guid(HttpContext.Items["CustomerId"].ToString());
-            var response = await ccpService.OrderSoftware(accountId, softwareId);
-            return response;
+            var customerId = currentCustomerService.CustomerId();
+            var responseStatusCode = await ccpService.OrderSoftware(customerId, accountId, softwareId);
+            return StatusCode((int)responseStatusCode);
         }
 
         [Authorize]
@@ -62,8 +63,9 @@ namespace CloudSalesSystem.Controllers
         [Route("PurchasedSoftware")]
         public async Task<List<Software>> PurchasedSoftware(Guid accountId)
         {
-            var customerId = new Guid(HttpContext.Items["CustomerId"].ToString());
-            var response = await customerService.PurchasedSoftware(accountId);
+            var contextCustomerId = HttpContext.Items.FirstOrDefault(a => a.Key.ToString() == "CustomerId").Value!;
+            var customerId = new Guid(contextCustomerId.ToString());
+            var response = await customerService.PurchasedSoftware(customerId, accountId);
             return response;
         }
 
@@ -72,7 +74,7 @@ namespace CloudSalesSystem.Controllers
         [Route("UpdateQuantity")]
         public async Task<bool> UpdateQuantity(Guid softwareId, int quantity)
         {
-            var customerId = new Guid(HttpContext.Items["CustomerId"].ToString());
+            var sessionCustomerId = HttpContext.Session.GetString("CustomerId");
             var response = await customerService.UpdateLicenceQuantity(softwareId, quantity);
             return response;
         }
@@ -80,21 +82,19 @@ namespace CloudSalesSystem.Controllers
         [Authorize]
         [HttpPut]
         [Route("CancelSubscription")]
-        public async Task<bool> CancelAccount(Guid softwareId)
-        {
-            var customerId = new Guid(HttpContext.Items["CustomerId"].ToString());
-            var response = await customerService.CancelSubscription(softwareId);
-            return response;
+        public async Task<ActionResult> CancelAccount(Guid softwareId)
+        {  
+            var isSucceessfull = await customerService.CancelSubscription(softwareId);        
+            return isSucceessfull ? Ok() : StatusCode(405);
         }
 
         [Authorize]
         [HttpPut]
         [Route("ExtendLicence")]
-        public async Task<bool> ExtendLicence(Guid softwareId, int months)
+        public async Task<ActionResult> ExtendLicence(Guid softwareId, int months)
         {
-            var customerId = new Guid(HttpContext.Items["CustomerId"].ToString());
-            var response = await customerService.ExtendSoftwareLicence(softwareId, months);
-            return response;
+            var isSuccessful = await customerService.ExtendSoftwareLicence(softwareId, months);
+            return isSuccessful ? Ok() : StatusCode(405);
         }
     }
 }

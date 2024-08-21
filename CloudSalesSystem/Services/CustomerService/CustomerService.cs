@@ -13,9 +13,11 @@ namespace CloudSalesSystem.Services.CCPService
             return result;
         }
 
-        public async Task<List<Software>> PurchasedSoftware(Guid accountId)
+        public async Task<List<Software>> PurchasedSoftware(Guid customerId, Guid accountId)
         {
-            var result = await cloudSalesSystemDbContext.Softwares.Where(a => a.Account.Id == accountId).ToListAsync();
+            var result = await cloudSalesSystemDbContext.Softwares.Where(
+                a => a.Account.Id == accountId && 
+                a.Account.Customer.Id== customerId).ToListAsync();
             return result;
         }
 

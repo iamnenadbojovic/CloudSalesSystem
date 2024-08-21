@@ -1,10 +1,15 @@
-﻿namespace CloudSalesSystem.Models
+﻿using CloudSalesSystem.Interfaces;
+
+namespace CloudSalesSystem.Models
 {
-    public class Customer : Credentials
+    public class Customer
     {
-        public required Guid Id { get; set; }
-        public required string Email { get; set; }
-        public required DateTime Created { get; set; }
-        public ICollection<Account> AccountEntries { get; } = [];
+        public ICollection<Account> AccountEntries { get; set; }
+    
+        public DateTime Created { get; set; }
+        public string Password { get; set; }
+        public string Username { get; set; }
+        public string Email { get; set; }
+        public Guid Id { get; set; }
     }
 }

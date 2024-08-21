@@ -4,6 +4,7 @@ using CloudSalesSystem.Interfaces;
 using CloudSalesSystem.Middleware;
 using CloudSalesSystem.Models;
 using CloudSalesSystem.Services.CCPService;
+using CloudSalesSystem.Services.CurrentCustomerService;
 using CloudSalesSystem.Services.LoginService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -16,18 +17,20 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddMockHttpClient();
 var connectionString = builder.Configuration.GetConnectionString("CloudSalesSytem");
-builder.Services.AddTransient<ICredentials, Credentials>();
 
 
 builder.Services.AddDbContext<CloudSalesSystemDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<ICCPService, CCPService>();
-builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddHttpContextAccessor();
+
 
 builder.Services.AddControllers();
+builder.Services.AddTransient<ICurrentCustomerService, CurrentCustomerService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c => {
+builder.Services.AddSwaggerGen(c =>
+{
     c.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "CloudSalesSytem",
@@ -50,12 +53,12 @@ builder.Services.AddSwaggerGen(c => {
                         Id = "Bearer"
                 }
             },
-            new string[] {}
+            Array.Empty<string>()
         }
     });
 });
 
-
+builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

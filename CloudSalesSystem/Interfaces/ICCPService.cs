@@ -1,10 +1,12 @@
 ﻿using CloudSalesSystem.Models;
+using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace CloudSalesSystem.Interfaces
 {
     public interface ICCPService
     {
         Task<CCPSoftware[]> SoftwareServices();
-        Task<HttpResponseMessage> OrderSoftware(Guid accountId, int softwareId);
-    }
+        Task<HttpStatusCode> OrderSoftware(Guid customerId, Guid accountId, int softwareId);
+    }   
 }
