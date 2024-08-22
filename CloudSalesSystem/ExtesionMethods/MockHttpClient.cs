@@ -65,14 +65,7 @@ namespace CloudSalesSystem.HelperClasses
 
                 handlerMock.Protected().Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri!.ToString().Contains("cancel")),
-                    ItExpr.IsAny<CancellationToken>()
-                )
-                .Returns(() => genericResponse());
-
-                handlerMock.Protected().Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri!.ToString().Contains("extend")),
+                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri!.ToString().Contains("cancel") || x.RequestUri!.ToString().Contains("extend")),
                     ItExpr.IsAny<CancellationToken>()
                 )
                 .Returns(() => genericResponse());

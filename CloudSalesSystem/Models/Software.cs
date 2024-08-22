@@ -4,7 +4,7 @@ namespace CloudSalesSystem.Models
 {
     public class Software
     {
-        public Guid? Id { get; set; }
+        public Guid Id { get; set; }
         public required string Name { get; set; }
 
         public required int CCPID { get; set; }

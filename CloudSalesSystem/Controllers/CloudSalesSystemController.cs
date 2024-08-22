@@ -100,7 +100,7 @@ namespace CloudSalesSystem.Controllers
         }
 
         [Authorize]
-        [HttpPut]
+        [HttpDelete]
         [Route("CancelSubscription")]
         public async Task<ActionResult> CancelAccount(Guid softwareId)
         {

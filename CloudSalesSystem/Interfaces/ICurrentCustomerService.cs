@@ -3,6 +3,5 @@
     public interface ICurrentCustomerService
     {
         public Guid CustomerId();
-
     }
 }

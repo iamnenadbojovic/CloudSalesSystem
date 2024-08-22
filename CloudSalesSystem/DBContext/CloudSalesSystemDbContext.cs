@@ -5,9 +5,9 @@ namespace CloudSalesSystem.DBContext
 {
     public class CloudSalesSystemDbContext(DbContextOptions<CloudSalesSystemDbContext> options) : DbContext(options)
     {
-        public DbSet<Customer> Customers { get; set; }
-        public DbSet<Account> Accounts { get; set; }
-        public DbSet<Software> Softwares { get; set; }
+        public virtual DbSet<Customer> Customers { get; set; }
+        public virtual  DbSet<Account> Accounts { get; set; }
+        public virtual  DbSet<Software> Softwares { get; set; }
 
     }
 }
