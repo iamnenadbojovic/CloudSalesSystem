@@ -76,9 +76,9 @@ namespace CloudSalesSystemTests
             mockContext.Setup(m => m.Accounts).ReturnsDbSet(accounts);
             mockContext.Setup(m => m.Softwares).ReturnsDbSet(softwares);
 
+            var ccpService = new CustomerService(mockContext.Object);
 
             // Act
-            var ccpService = new CustomerService(mockContext.Object);
             var result = await ccpService.UpdateLicenceQuantity(new Guid(customerId), new Guid(softwareId), 3);
 
 

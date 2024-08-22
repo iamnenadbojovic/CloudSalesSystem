@@ -16,6 +16,7 @@ namespace CloudSalesSystem.HelperClasses
                new CCPSoftware{ Id = 3, Name = "Microsoft Teams" },
                new CCPSoftware{ Id = 4, Name = "Microsoft Viva" },
                new CCPSoftware{ Id = 5, Name = "Microsoft Visual Studio" }];
+
             Func<Task<HttpResponseMessage>> productsResponse = () => Task.FromResult(
               new HttpResponseMessage()
               {
