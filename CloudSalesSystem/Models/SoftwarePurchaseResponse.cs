@@ -1,8 +1,7 @@
 ﻿namespace CloudSalesSystem.Models
 {
-    public class SoftwarePurchaseResponse
+    public class SoftwarePurchaseResponse : BaseResponse
     {
-        public string? Message { get; set; }
-        public DateTime Expiry { get; set; }
+      public DateTime Expiry { get; set; }
     }
 }

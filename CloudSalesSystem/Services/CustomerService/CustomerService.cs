@@ -1,6 +1,7 @@
 ﻿using CloudSalesSystem.DBContext;
 using CloudSalesSystem.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace CloudSalesSystem.Services.CCPService
 {
@@ -21,6 +22,21 @@ namespace CloudSalesSystem.Services.CCPService
             return result;
         }
 
-       
+        public async Task<HttpStatusCode> UpdateLicenceQuantity(Guid customerId, Guid softwareId, int quantity)
+        {
+            var softwareEntity = await cloudSalesSystemDbContext.Softwares.FirstOrDefaultAsync(
+                a => a.Id == softwareId &&
+                a.Account.Customer.Id == customerId && a.State != "Cancelled");
+
+            if (softwareEntity == null)
+            {
+                return HttpStatusCode.NotFound;
+            }
+            softwareEntity.Quantity = quantity;
+
+            await cloudSalesSystemDbContext.SaveChangesAsync();
+
+            return HttpStatusCode.OK;
+        }
     }
 }

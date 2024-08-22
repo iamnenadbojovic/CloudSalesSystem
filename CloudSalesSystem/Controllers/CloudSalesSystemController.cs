@@ -23,18 +23,28 @@ namespace CloudSalesSystem.Controllers
             var token = await loginService.Login(credentials);
             if (token == null || token == string.Empty)
             {
-                return BadRequest(new { message = "Username or Password is incorrect" });
+                string message = "Username or Password is incorrect";
+                logger.LogError(message);
+                return BadRequest(new { message });
             }
+            const string success = "Token Acquired";
+            logger.LogError(success);
             return Ok(token);
         }
 
         [Authorize]
         [HttpGet]
         [Route("services")]
-        public async Task<CCPSoftware[]> SoftwareServices()
+        public async Task<ActionResult<CCPSoftware[]>> SoftwareServices()
         {
             var softwareServices = await ccpService.SoftwareServices();
-            return softwareServices;
+            if(softwareServices == null || softwareServices.Length==0)
+            {
+                string message = "Not Found";
+                logger.LogError(message);
+                return NotFound();
+            }
+            return Ok(softwareServices);
         }
 
         [Authorize]
@@ -44,7 +54,12 @@ namespace CloudSalesSystem.Controllers
         {
             var customerId = currentCustomerService.CustomerId();
             var accountsEntriesList = await customerService.CustomerAccounts(customerId);
-
+            if (accountsEntriesList == null)
+            {
+                string message = "Not Found";
+                logger.LogError(message);
+                return NotFound();
+            }
             return Ok(accountsEntriesList);
         }
 
@@ -61,21 +76,27 @@ namespace CloudSalesSystem.Controllers
         [Authorize]
         [HttpGet]
         [Route("PurchasedSoftware")]
-        public async Task<List<Software>> PurchasedSoftware(Guid accountId)
+        public async Task<ActionResult<List<Software>>> PurchasedSoftware(Guid accountId)
         {
             var customerId = currentCustomerService.CustomerId();
             var response = await customerService.PurchasedSoftware(customerId, accountId);
-            return response;
+            if(response == null)
+            {
+                string message = "Not Found";
+                logger.LogError(message);
+                return StatusCode(404);
+            }
+            return Ok(response);
         }
 
         [Authorize]
         [HttpPut]
         [Route("UpdateQuantity")]
-        public async Task<bool> UpdateQuantity(Guid softwareId, int quantity)
+        public async Task<ActionResult> UpdateQuantity(Guid softwareId, int quantity)
         {
             var customerId = currentCustomerService.CustomerId();
-            var response = await customerService.UpdateLicenceQuantity(customerId, softwareId, quantity);
-            return response;
+            var statusCode = await customerService.UpdateLicenceQuantity(customerId, softwareId, quantity);
+            return StatusCode((int)statusCode);
         }
 
         [Authorize]
@@ -84,8 +105,8 @@ namespace CloudSalesSystem.Controllers
         public async Task<ActionResult> CancelAccount(Guid softwareId)
         {
             var customerId = currentCustomerService.CustomerId();
-            var isSucceessfull = await customerService.CancelSubscription(customerId, softwareId);
-            return isSucceessfull ? Ok() : StatusCode(405);
+            var statusCode = await ccpService.CancelSubscription(customerId, softwareId);
+            return StatusCode((int)statusCode);
         }
 
         [Authorize]
@@ -94,8 +115,8 @@ namespace CloudSalesSystem.Controllers
         public async Task<ActionResult> ExtendLicence(Guid softwareId, int months)
         {
             var customerId = currentCustomerService.CustomerId();
-            var isSuccessful = await customerService.ExtendSoftwareLicence(customerId, softwareId, months);
-            return isSuccessful ? Ok() : StatusCode(405);
+            var statusCode = await ccpService.ExtendSoftwareLicence(customerId, softwareId, months);
+            return StatusCode((int)statusCode);
         }
     }
 }

@@ -18,10 +18,10 @@ namespace CloudSalesSystem.Services.CCPService
         {
             var client = httpClientFactory.CreateClient("FakeData");
             var softwareServices = await client.GetFromJsonAsync<CCPSoftware[]>(
-                "https://www.ccp.org/products/list",
+                "https://www.ccp.org/services/list",
                 new JsonSerializerOptions(JsonSerializerDefaults.Web)
                 );
-            return softwareServices!;
+            return softwareServices;
         }
 
         public async Task<HttpStatusCode> OrderSoftware(Guid customerId, Guid accountId, int softwareId)
@@ -33,6 +33,7 @@ namespace CloudSalesSystem.Services.CCPService
                 return HttpStatusCode.Forbidden;
 
             }
+ 
             var accountEntry = await cloudSalesSystemDbContext.Accounts.FirstOrDefaultAsync(
                 a => a.Id == accountId
                 && a.Customer.Id == customerId);
@@ -42,13 +43,22 @@ namespace CloudSalesSystem.Services.CCPService
                 return HttpStatusCode.NotFound;
             }
 
+            var softwareExists = await cloudSalesSystemDbContext.Softwares.FirstOrDefaultAsync(
+                a => a.Account.Id == accountId
+                && a.Account.Customer.Id == customerId && a.CCPID == softwareId);
+            if(softwareExists != null)
+            {
+                return HttpStatusCode.Conflict;
+            }
+
+
             var client = httpClientFactory.CreateClient("FakeData");
             using StringContent json = new(
                JsonSerializer.Serialize(new { accountId }, new JsonSerializerOptions(JsonSerializerDefaults.Web)),
                Encoding.UTF8,
                MediaTypeNames.Application.Json);
 
-            var httpResponse = await client.PostAsync($"https://www.css.org/services/{softwareId}/purchase", json);
+            var httpResponse = await client.PostAsync($"https://www.css.org/services/{softwareId}/order", json);
             string httpResponseContent = await httpResponse.Content.ReadAsStringAsync();
             if (httpResponse.StatusCode != HttpStatusCode.OK)
             {
@@ -61,6 +71,7 @@ namespace CloudSalesSystem.Services.CCPService
             {
                 Name = softwareListCheck.Name!,
                 Quantity = 1,
+                CCPID= softwareId,
                 ValidToDate = softwarePurchaseResponse!.Expiry,
             };
 
@@ -70,53 +81,59 @@ namespace CloudSalesSystem.Services.CCPService
             return HttpStatusCode.OK;
         }
 
-        public async Task<bool> UpdateLicenceQuantity(Guid customerId, Guid softwareId, int quantity)
-        {
-            var softwareEntity = await cloudSalesSystemDbContext.Softwares.FirstOrDefaultAsync(
-                a => a.Id == softwareId &&
-                a.Account.Customer.Id == customerId);
 
-            if (softwareEntity == null)
-            {
-                return false;
-            }
-            softwareEntity.Quantity = quantity;
-
-            await cloudSalesSystemDbContext.SaveChangesAsync();
-
-            return true;
-        }
-
-        public async Task<bool> CancelSubscription(Guid customerId, Guid softwareId)
+        public async Task<HttpStatusCode> CancelSubscription(Guid customerId, Guid softwareId)
         {
             var softwareEntity = await cloudSalesSystemDbContext.Softwares.FirstOrDefaultAsync(
             a => a.Id == softwareId &&
-                a.Account.Customer.Id == customerId);
+                a.Account.Customer.Id == customerId && a.State!="Cancelled");
             if (softwareEntity == null)
             {
-                return false;
+                return HttpStatusCode.NotFound;
+            }
+            using StringContent json = new(
+               JsonSerializer.Serialize(new { accountId =  softwareEntity.Account.Id }, new JsonSerializerOptions(JsonSerializerDefaults.Web)),
+               Encoding.UTF8,
+               MediaTypeNames.Application.Json);
+
+            var client = httpClientFactory.CreateClient("FakeData");
+            var httpResponse = await client.PostAsync($"https://www.css.org/services/{softwareId}/cancel", json);
+            if (httpResponse.StatusCode != HttpStatusCode.OK)
+            {
+                return httpResponse.StatusCode;
             }
             softwareEntity.State = "Cancelled";
 
             await cloudSalesSystemDbContext.SaveChangesAsync();
 
-            return true;
+            return HttpStatusCode.OK;
         }
 
-        public async Task<bool> ExtendSoftwareLicence(Guid customerId, Guid softwareId, int days)
+        public async Task<HttpStatusCode> ExtendSoftwareLicence(Guid customerId, Guid softwareId, int days)
         {
             var softwareEntity = await cloudSalesSystemDbContext.Softwares.FirstOrDefaultAsync(
             a => a.Id == softwareId &&
-                a.Account.Customer.Id == customerId);
+                a.Account.Customer.Id == customerId && a.State!="Cancelled");
             if (softwareEntity == null)
             {
-                return false;
+                return HttpStatusCode.NotFound;
+            }
+            using StringContent json = new(
+              JsonSerializer.Serialize(new { accountId = softwareEntity.Account.Id }, new JsonSerializerOptions(JsonSerializerDefaults.Web)),
+              Encoding.UTF8,
+              MediaTypeNames.Application.Json);
+
+            var client = httpClientFactory.CreateClient("FakeData");
+            var httpResponse = await client.PostAsync($"https://www.css.org/services/{softwareId}/extend", json);
+            if (httpResponse.StatusCode != HttpStatusCode.OK)
+            {
+                return httpResponse.StatusCode;
             }
             softwareEntity.ValidToDate = softwareEntity.ValidToDate.AddDays(days);
 
             await cloudSalesSystemDbContext.SaveChangesAsync();
 
-            return true;
+            return HttpStatusCode.OK;
         }
     }
 

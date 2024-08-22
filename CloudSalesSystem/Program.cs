@@ -20,6 +20,7 @@ var connectionString = builder.Configuration.GetConnectionString("CloudSalesSyte
 builder.Services.AddDbContext<CloudSalesSystemDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<ICCPService, CCPService>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddHttpContextAccessor();
 
 
@@ -59,7 +60,6 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

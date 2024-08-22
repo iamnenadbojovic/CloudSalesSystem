@@ -7,5 +7,7 @@ namespace CloudSalesSystem.Interfaces
     {
         Task<CCPSoftware[]> SoftwareServices();
         Task<HttpStatusCode> OrderSoftware(Guid customerId, Guid accountId, int softwareId);
+        Task<HttpStatusCode> CancelSubscription(Guid customerId, Guid softwareId);
+        Task<HttpStatusCode> ExtendSoftwareLicence(Guid customerId, Guid softwareId, int days);
     }
 }

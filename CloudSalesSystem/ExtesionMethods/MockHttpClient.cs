@@ -16,69 +16,72 @@ namespace CloudSalesSystem.HelperClasses
                new CCPSoftware{ Id = 3, Name = "Microsoft Teams" },
                new CCPSoftware{ Id = 4, Name = "Microsoft Viva" },
                new CCPSoftware{ Id = 5, Name = "Microsoft Visual Studio" }];
+            Func<Task<HttpResponseMessage>> productsResponse = () => Task.FromResult(
+              new HttpResponseMessage()
+              {
+                  StatusCode = HttpStatusCode.OK,
+                  Content = new StringContent(JsonSerializer.Serialize(response))
+              });
 
             const string link = "https://www.ccp.org";
             var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
 
             handlerMock.Protected().Setup<Task<HttpResponseMessage>>(
                 "SendAsync",
-                ItExpr.Is<HttpRequestMessage>(x => x.RequestUri == new Uri($"{link}/products/list")),
+                ItExpr.Is<HttpRequestMessage>(x => x.RequestUri == new Uri($"{link}/services/list")),
                 ItExpr.IsAny<CancellationToken>()
-            )
-            .ReturnsAsync(new HttpResponseMessage()
-            {
-                StatusCode = HttpStatusCode.OK,
-                Content = new StringContent(JsonSerializer.Serialize(response))
-            }
-            );
-            foreach (var item in response)
-            {
+            ) .Returns(() => productsResponse());
+    
+
                 var softwarePurchaseResponse = new SoftwarePurchaseResponse()
                 {
-                    Message = $"{item.Name} purchase Successfull",
+                    Message = $"Purchase Successfull",
                     Expiry = DateTime.Now.AddMonths(1)
                 };
-
-                var uriString = $"{link}/{item.Id}/purchase";
+                Func<Task<HttpResponseMessage>> purchaseResponse = () => Task.FromResult(
+              new HttpResponseMessage()
+              {
+                  StatusCode = HttpStatusCode.OK,
+                  Content = new StringContent(JsonSerializer.Serialize(softwarePurchaseResponse))
+              });
                 handlerMock.Protected().Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri == new Uri(uriString)),
+                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri!.ToString().Contains("order")),
                     ItExpr.IsAny<CancellationToken>()
                 )
-                .ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent(JsonSerializer.Serialize(softwarePurchaseResponse))
-                });
+                .Returns(() => purchaseResponse());
 
-                var cancelUriString = $"{link}/{item.Id}/cancel";
+                var genericResponseContent= new BaseResponse()
+                {
+                    Message = $"Action Successfull",
+                };
+
+                Func<Task<HttpResponseMessage>> genericResponse = () => Task.FromResult(
+              new HttpResponseMessage()
+              {
+                  StatusCode = HttpStatusCode.OK,
+                  Content = new StringContent(JsonSerializer.Serialize(genericResponseContent))
+              });
+
                 handlerMock.Protected().Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri == new Uri(cancelUriString)),
+                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri!.ToString().Contains("cancel")),
                     ItExpr.IsAny<CancellationToken>()
                 )
-                .ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent(JsonSerializer.Serialize(softwarePurchaseResponse))
-                });
+                .Returns(() => genericResponse());
 
-                var extendUriString = $"{link}/{item.Id}/extend";
                 handlerMock.Protected().Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri == new Uri(extendUriString)),
+                    ItExpr.Is<HttpRequestMessage>(x => x.RequestUri!.ToString().Contains("extend")),
                     ItExpr.IsAny<CancellationToken>()
                 )
-                .ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent(JsonSerializer.Serialize(softwarePurchaseResponse))
-                });
-            }
+                .Returns(() => genericResponse());
 
 
             services.AddHttpClient("FakeData").ConfigurePrimaryHttpMessageHandler(() => handlerMock.Object);
-        }
+       
+    }
 
     }
+
 }
