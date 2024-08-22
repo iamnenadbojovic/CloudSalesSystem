@@ -11,7 +11,7 @@ namespace CloudSalesSystem.Services.LoginService
 {
     public class LoginService(CloudSalesSystemDbContext cloudSalesSystemDbContext, IConfiguration configuration) : ILoginService
     {
-     
+
         public async Task<string> Login(Credentials credentials)
         {
             var loginCustomer = await cloudSalesSystemDbContext.Customers.FirstOrDefaultAsync(
@@ -25,7 +25,8 @@ namespace CloudSalesSystem.Services.LoginService
             var tokenHandler = new JwtSecurityTokenHandler();
             var jwtKey = configuration["Jwt:Key"];
 
-            if(jwtKey == null) {
+            if (jwtKey == null)
+            {
                 return string.Empty;
             }
 

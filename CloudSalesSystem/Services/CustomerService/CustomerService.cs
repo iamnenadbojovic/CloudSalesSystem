@@ -21,53 +21,6 @@ namespace CloudSalesSystem.Services.CCPService
             return result;
         }
 
-        public async Task<bool> UpdateLicenceQuantity(Guid customerId, Guid softwareId, int quantity)
-        {
-            var softwareEntity = await cloudSalesSystemDbContext.Softwares.FirstOrDefaultAsync(
-                a => a.Id == softwareId &&
-                a.Account.Customer.Id == customerId);
-
-            if (softwareEntity == null)
-            {
-                return false;
-            }
-            softwareEntity.Quantity = quantity;
-
-            await cloudSalesSystemDbContext.SaveChangesAsync();
-
-            return true;
-        }
-
-        public async Task<bool> CancelSubscription(Guid customerId, Guid softwareId)
-        {
-            var softwareEntity = await cloudSalesSystemDbContext.Softwares.FirstOrDefaultAsync(
-            a => a.Id == softwareId &&
-                a.Account.Customer.Id == customerId);
-            if (softwareEntity == null)
-            {
-                return false;
-            }
-            softwareEntity.State = "Cancelled";
-
-            await cloudSalesSystemDbContext.SaveChangesAsync();
-
-            return true;
-        }
-
-        public async Task<bool> ExtendSoftwareLicence(Guid customerId, Guid softwareId, int days)
-        {
-            var softwareEntity = await cloudSalesSystemDbContext.Softwares.FirstOrDefaultAsync(
-            a => a.Id == softwareId &&
-                a.Account.Customer.Id == customerId);
-            if (softwareEntity == null)
-            {
-                return false;
-            }
-            softwareEntity.ValidToDate = softwareEntity.ValidToDate.AddDays(days);
-
-            await cloudSalesSystemDbContext.SaveChangesAsync();
-
-            return true;
-        }
+       
     }
 }

@@ -14,7 +14,7 @@ namespace CloudSalesSystem.Controllers
         ICCPService ccpService,
         ICurrentCustomerService currentCustomerService,
         ICustomerService customerService) : ControllerBase
-        {
+    {
 
         [HttpPost("Login")]
         [AllowAnonymous]
@@ -32,7 +32,7 @@ namespace CloudSalesSystem.Controllers
         [HttpGet]
         [Route("services")]
         public async Task<CCPSoftware[]> SoftwareServices()
-        {           
+        {
             var softwareServices = await ccpService.SoftwareServices();
             return softwareServices;
         }
@@ -44,7 +44,7 @@ namespace CloudSalesSystem.Controllers
         {
             var customerId = currentCustomerService.CustomerId();
             var accountsEntriesList = await customerService.CustomerAccounts(customerId);
-     
+
             return Ok(accountsEntriesList);
         }
 
@@ -84,7 +84,7 @@ namespace CloudSalesSystem.Controllers
         public async Task<ActionResult> CancelAccount(Guid softwareId)
         {
             var customerId = currentCustomerService.CustomerId();
-            var isSucceessfull = await customerService.CancelSubscription(customerId, softwareId);        
+            var isSucceessfull = await customerService.CancelSubscription(customerId, softwareId);
             return isSucceessfull ? Ok() : StatusCode(405);
         }
 

@@ -1,5 +1,4 @@
 ﻿using CloudSalesSystem.Models;
-using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
 namespace CloudSalesSystem.Interfaces
@@ -8,5 +7,5 @@ namespace CloudSalesSystem.Interfaces
     {
         Task<CCPSoftware[]> SoftwareServices();
         Task<HttpStatusCode> OrderSoftware(Guid customerId, Guid accountId, int softwareId);
-    }   
+    }
 }
