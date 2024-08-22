@@ -12,7 +12,7 @@ namespace CloudSalesSystem.Services.CurrentCustomerService
 
             if (authHeader != null)
             {
-                var tokenText = authHeader.Substring(authHeader.IndexOf("Bearer ") + 7).Trim();
+                var tokenText = authHeader.Substring(authHeader.IndexOf(" ") + 1).Trim();
 
                 var handler = new JwtSecurityTokenHandler();
                 var token = handler.ReadJwtToken(tokenText);

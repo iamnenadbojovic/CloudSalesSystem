@@ -40,21 +40,13 @@ namespace CloudSalesSystemTests
         {
             // Arrange
             var customerEmptyAccount = new Guid("1D6ABF8E-6A2E-4606-9714-1175B7B4DE73");
-            var mockContext = new Mock<CloudSalesSystemDbContext>(options);
-
-            var accounts = new List<Account>() { account };
-            var softwares = new List<Software>() { softwareEntry };
-
-            mockContext.Setup(m => m.Accounts).ReturnsDbSet(accounts);
-            mockContext.Setup(m => m.Softwares).ReturnsDbSet(softwares);
-
             var ccpService = new CustomerService(mockContext.Object);
 
             // Act
-            var result = await ccpService.CustomerAccounts(customer.Id);
+            var result = await ccpService.CustomerAccounts(customerEmptyAccount);
 
             // Assert
-            var expected = new List<Account> { account };
+            var expected = new List<Account> {};
             result.Should().BeEquivalentTo(expected);
         }
 
@@ -68,13 +60,6 @@ namespace CloudSalesSystemTests
         async Task UpdateLicenceQuantity_Returns_StatusCode200_StatusCode404(string customerId, string softwareId, int statusCode)
         {
             // Arrange
-            var mockContext = new Mock<CloudSalesSystemDbContext>(options);
-
-            var accounts = new List<Account>() { account };
-            var softwares = new List<Software>() { softwareEntry };
-
-            mockContext.Setup(m => m.Accounts).ReturnsDbSet(accounts);
-            mockContext.Setup(m => m.Softwares).ReturnsDbSet(softwares);
 
             var ccpService = new CustomerService(mockContext.Object);
 

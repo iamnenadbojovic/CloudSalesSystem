@@ -2,7 +2,6 @@ using CloudSalesSystem.DBContext;
 using CloudSalesSystem.Models;
 using CloudSalesSystem.Services.CCPService;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
 using Moq;
 using Moq.EntityFrameworkCore;
 using Moq.Protected;
@@ -32,15 +31,6 @@ namespace CloudSalesSystemTests
         async Task SoftwareServices_RetursArray()
         {
             // Arrange
-            var customerMockSet = new Mock<DbSet<Customer>>();
-            var accountMockSet = new Mock<DbSet<Account>>();
-            var softwareMockSet = new Mock<DbSet<Software>>();
-            var mockContext = new Mock<CloudSalesSystemDbContext>(options);
-
-            mockContext.Setup(m => m.Customers).Returns(customerMockSet.Object);
-            mockContext.Setup(m => m.Accounts).Returns(accountMockSet.Object);
-            mockContext.Setup(m => m.Softwares).Returns(softwareMockSet.Object);
-
             Task<HttpResponseMessage> productsResponse = Task.FromResult(
              new HttpResponseMessage()
              {
@@ -72,22 +62,12 @@ namespace CloudSalesSystemTests
         async Task SoftwareServices_ReturnsEmptyArray()
         {
             // Arrange
-            var customerMockSet = new Mock<DbSet<Customer>>();
-            var accountMockSet = new Mock<DbSet<Account>>();
-            var softwareMockSet = new Mock<DbSet<Software>>();
-            var mockContext = new Mock<CloudSalesSystemDbContext>(options);
-
-            mockContext.Setup(m => m.Customers).Returns(customerMockSet.Object);
-            mockContext.Setup(m => m.Accounts).Returns(accountMockSet.Object);
-            mockContext.Setup(m => m.Softwares).Returns(softwareMockSet.Object);
-
             CCPSoftware[] content = [];
             Task<HttpResponseMessage> productsResponse = Task.FromResult(
              new HttpResponseMessage()
              {
                  StatusCode = HttpStatusCode.NotFound,
              });
-
 
             var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
 
@@ -119,15 +99,6 @@ namespace CloudSalesSystemTests
         async Task OrderSoftware_Returns_StatusCode200()
         {
             // Arrange
-            var customerMockSet = new Mock<DbSet<Customer>>();
-            var mockContext = new Mock<CloudSalesSystemDbContext>(options);
-            
-            var accounts = new List<Account>() { account };
-            var softwares = new List<Software>() { softwareEntry };
-
-            mockContext.Setup(m => m.Customers).Returns(customerMockSet.Object);
-            mockContext.Setup(m => m.Accounts).ReturnsDbSet(accounts);
-            mockContext.Setup(m => m.Softwares).ReturnsDbSet(softwares);
 
             Task<HttpResponseMessage> productsResponse = Task.FromResult(
              new HttpResponseMessage()
@@ -179,8 +150,6 @@ namespace CloudSalesSystemTests
         {
             // Arrange
 
-            var mockContext = new Mock<CloudSalesSystemDbContext>(options);
-
             var emptyResponse = new CCPSoftware[] { };
             Task<HttpResponseMessage> productsResponse = Task.FromResult(
              new HttpResponseMessage()
@@ -217,17 +186,6 @@ namespace CloudSalesSystemTests
         async Task OrderSoftware_Returns_StatusCode404_StatusCode409(string customerId,string accountId, int statusCode)
         {
             // Arrange
-            var mockContext = new Mock<CloudSalesSystemDbContext>(options);
-
-
-            var customers = new List<Customer>() { customer };
-            var accounts = new List<Account>() { account };
-            var softwares = new List<Software>() { softwareEntry };
-
-            mockContext.Setup(m => m.Customers).ReturnsDbSet(customers);
-            mockContext.Setup(m => m.Accounts).ReturnsDbSet(accounts);
-            mockContext.Setup(m => m.Softwares).ReturnsDbSet(softwares);
-
             Task<HttpResponseMessage> productsResponse = Task.FromResult(
              new HttpResponseMessage()
              {
@@ -281,7 +239,6 @@ namespace CloudSalesSystemTests
         [InlineData("C4B63093-52F4-4EC3-B6B3-FDBE9C2B76D3", "2D6ABF8E-6A2E-4606-9714-1175B7B4DE73", 200)]
         async Task CancelSubscription_Returns_StatusCode200_StatusCode404(string customerId, string softwareId, int statusCode )
         {
-            // Arrange
             var mockContext = new Mock<CloudSalesSystemDbContext>(options);
 
             var customers = new List<Customer>() { customer };
@@ -297,6 +254,7 @@ namespace CloudSalesSystemTests
             {
                 Message = $"Action Successfull",
             };
+
             Func<Task<HttpResponseMessage>> genericResponse = () => Task.FromResult(
                   new HttpResponseMessage()
                   {
@@ -311,7 +269,7 @@ namespace CloudSalesSystemTests
             )
             .Returns(() => genericResponse());
 
-          
+
             var mockFactory = new Mock<IHttpClientFactory>();
             var client = new HttpClient(handlerMock.Object);
             mockFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(client);
@@ -335,16 +293,6 @@ namespace CloudSalesSystemTests
         async Task ExtendSoftwareLicence_Returns_StatusCode200_StatusCode404(string customerId, string softwareId, int statusCode)
         {
             // Arrange
-            var mockContext = new Mock<CloudSalesSystemDbContext>(options);
-
-            var customers = new List<Customer>() { customer };
-            var accounts = new List<Account>() { account };
-            var softwares = new List<Software>() { softwareEntry };
-
-            mockContext.Setup(m => m.Customers).ReturnsDbSet(customers);
-            mockContext.Setup(m => m.Accounts).ReturnsDbSet(accounts);
-            mockContext.Setup(m => m.Softwares).ReturnsDbSet(softwares);
-
             var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
             var genericResponseContent = new BaseResponse()
             {

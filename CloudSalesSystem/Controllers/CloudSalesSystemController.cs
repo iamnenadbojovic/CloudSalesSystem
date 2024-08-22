@@ -35,6 +35,7 @@ namespace CloudSalesSystem.Controllers
         [Authorize]
         [HttpGet]
         [Route("services")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<CCPSoftware[]>> SoftwareServices()
         {
             var softwareServices = await ccpService.SoftwareServices();
@@ -50,6 +51,8 @@ namespace CloudSalesSystem.Controllers
         [Authorize]
         [HttpGet]
         [Route("accountList")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> AccountsList()
         {
             var customerId = currentCustomerService.CustomerId();
@@ -66,6 +69,10 @@ namespace CloudSalesSystem.Controllers
         [Authorize]
         [HttpPost]
         [Route("OrderService")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<ActionResult> OrderService(Guid accountId, int softwareId)
         {
             var customerId = currentCustomerService.CustomerId();
@@ -76,6 +83,8 @@ namespace CloudSalesSystem.Controllers
         [Authorize]
         [HttpGet]
         [Route("PurchasedSoftware")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<List<Software>>> PurchasedSoftware(Guid accountId)
         {
             var customerId = currentCustomerService.CustomerId();
@@ -92,6 +101,8 @@ namespace CloudSalesSystem.Controllers
         [Authorize]
         [HttpPut]
         [Route("UpdateQuantity")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> UpdateQuantity(Guid softwareId, int quantity)
         {
             var customerId = currentCustomerService.CustomerId();
@@ -102,6 +113,8 @@ namespace CloudSalesSystem.Controllers
         [Authorize]
         [HttpDelete]
         [Route("CancelSubscription")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> CancelAccount(Guid softwareId)
         {
             var customerId = currentCustomerService.CustomerId();
@@ -112,6 +125,8 @@ namespace CloudSalesSystem.Controllers
         [Authorize]
         [HttpPut]
         [Route("ExtendLicence")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> ExtendLicence(Guid softwareId, int months)
         {
             var customerId = currentCustomerService.CustomerId();

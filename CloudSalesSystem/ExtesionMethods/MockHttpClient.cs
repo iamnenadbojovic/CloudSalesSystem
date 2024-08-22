@@ -74,8 +74,6 @@ namespace CloudSalesSystem.HelperClasses
 
             services.AddHttpClient("FakeData").ConfigurePrimaryHttpMessageHandler(() => handlerMock.Object);
        
+        }   
     }
-
-    }
-
 }
