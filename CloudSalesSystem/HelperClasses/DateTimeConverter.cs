@@ -4,6 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace CloudSalesSystem.HelperClasses
 {
+    /// <summary>
+    /// Converts datetime for json response
+    /// </summary>
     public class DateTimeConverter : JsonConverter<DateTime>
     {
         public override DateTime Read(ref Utf8JsonReader reader,

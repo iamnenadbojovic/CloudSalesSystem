@@ -10,7 +10,7 @@ using System.Text.Json;
 
 namespace CloudSalesSystemTests
 {
-    public class CCPServiceTests: BaseTests
+    public class CCPServiceTests : BaseTests
     {
         #region private fields
 
@@ -77,7 +77,7 @@ namespace CloudSalesSystemTests
                 ItExpr.IsAny<CancellationToken>()
             ).Returns(productsResponse);
 
-           
+
             var mockFactory = new Mock<IHttpClientFactory>();
             var client = new HttpClient(handlerMock.Object);
             mockFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(client);
@@ -93,10 +93,10 @@ namespace CloudSalesSystemTests
 
         #endregion
 
-        #region OrderSoftware Tests
+        #region OrderSoftwareLicence Tests
 
         [Fact]
-        async Task OrderSoftware_Returns_StatusCode200()
+        async Task OrderSoftwareLicence_Returns_StatusCode200()
         {
             // Arrange
 
@@ -106,7 +106,7 @@ namespace CloudSalesSystemTests
                  StatusCode = HttpStatusCode.OK,
                  Content = new StringContent(JsonSerializer.Serialize(expected))
              });
-            var softwarePurchaseResponse = new SoftwarePurchaseResponse()
+            var orderSoftwareLicenceResponse = new OrderSoftwareLicenceResponse()
             {
                 Message = $"Purchase Successfull",
                 Expiry = DateTime.Now.AddMonths(1)
@@ -115,7 +115,7 @@ namespace CloudSalesSystemTests
               new HttpResponseMessage()
               {
                   StatusCode = HttpStatusCode.OK,
-                  Content = new StringContent(JsonSerializer.Serialize(softwarePurchaseResponse))
+                  Content = new StringContent(JsonSerializer.Serialize(orderSoftwareLicenceResponse))
               });
 
             var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
@@ -132,21 +132,21 @@ namespace CloudSalesSystemTests
                )
                .Returns(() => purchaseResponse());
 
-         
+
             var mockFactory = new Mock<IHttpClientFactory>();
             var client = new HttpClient(handlerMock.Object);
             mockFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(client);
 
             // Act
             var ccpService = new CCPService(mockContext.Object, mockFactory.Object);
-            var result = await ccpService.OrderSoftware(customer.CustomerId, account.AccountId,ccpId:1);
+            var result = await ccpService.OrderSoftwareLicence(customer.CustomerId, account.AccountId, ccpId: 1);
             var expectedResult = HttpStatusCode.OK;
 
             Assert.Equal(expectedResult, result);
         }
 
         [Fact]
-        async Task OrderSoftware_Returns_StatusCode403()
+        async Task OrderSoftwareLicence_Returns_StatusCode403()
         {
             // Arrange
 
@@ -165,14 +165,14 @@ namespace CloudSalesSystemTests
                 ItExpr.Is<HttpRequestMessage>(x => x.RequestUri == new Uri($"{Url}/services/list")),
                 ItExpr.IsAny<CancellationToken>()
             ).Returns(productsResponse);
-            
+
             var mockFactory = new Mock<IHttpClientFactory>();
             var client = new HttpClient(handlerMock.Object);
             mockFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(client);
 
             // Act
             var ccpService = new CCPService(mockContext.Object, mockFactory.Object);
-            var result = await ccpService.OrderSoftware(Guid.Empty, Guid.Empty,2);
+            var result = await ccpService.OrderSoftwareLicence(Guid.Empty, Guid.Empty, 2);
 
             var expectedResult = HttpStatusCode.Forbidden;
 
@@ -183,7 +183,7 @@ namespace CloudSalesSystemTests
         [Theory]
         [InlineData("936ac57d-ee15-4156-9104-2799ac5d2d07", "936ac57d-eeee-4156-9104-2799ac5d2d07", 404)]
         [InlineData("C4B63093-52F4-4EC3-B6B3-FDBE9C2B76D3", "7D6ABF8E-6A2E-4606-9714-1175B7B4DE73", 409)]
-        async Task OrderSoftware_Returns_StatusCode404_StatusCode409(string customerId,string accountId, int statusCode)
+        async Task OrderSoftwareLicence_Returns_StatusCode404_StatusCode409(string customerId, string accountId, int statusCode)
         {
             // Arrange
             Task<HttpResponseMessage> productsResponse = Task.FromResult(
@@ -192,7 +192,7 @@ namespace CloudSalesSystemTests
                  StatusCode = HttpStatusCode.OK,
                  Content = new StringContent(JsonSerializer.Serialize(expected))
              });
-            var softwarePurchaseResponse = new SoftwarePurchaseResponse()
+            var orderSoftwareLicenceResponse = new OrderSoftwareLicenceResponse()
             {
                 Message = $"Purchase Successfull",
                 Expiry = DateTime.Now.AddMonths(1)
@@ -201,9 +201,9 @@ namespace CloudSalesSystemTests
               new HttpResponseMessage()
               {
                   StatusCode = HttpStatusCode.OK,
-                  Content = new StringContent(JsonSerializer.Serialize(softwarePurchaseResponse))
+                  Content = new StringContent(JsonSerializer.Serialize(orderSoftwareLicenceResponse))
               });
- 
+
             var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
 
             handlerMock.Protected().Setup<Task<HttpResponseMessage>>(
@@ -217,14 +217,14 @@ namespace CloudSalesSystemTests
                    ItExpr.IsAny<CancellationToken>()
                )
                .Returns(() => purchaseResponse());
-            
+
             var mockFactory = new Mock<IHttpClientFactory>();
             var client = new HttpClient(handlerMock.Object);
             mockFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(client);
 
             // Act
             var ccpService = new CCPService(mockContext.Object, mockFactory.Object);
-            var result = await ccpService.OrderSoftware(new Guid(customerId), new Guid(accountId), ccpId: 2);
+            var result = await ccpService.OrderSoftwareLicence(new Guid(customerId), new Guid(accountId), ccpId: 2);
 
             // Assert
             Assert.Equal(statusCode, (int)result);
@@ -237,7 +237,7 @@ namespace CloudSalesSystemTests
         [Theory]
         [InlineData("936ac57d-ee15-4156-9104-2799ac5d2d07", "936ac57d-eeee-4156-9104-2799ac5d2d07", 404)]
         [InlineData("C4B63093-52F4-4EC3-B6B3-FDBE9C2B76D3", "2D6ABF8E-6A2E-4606-9714-1175B7B4DE73", 200)]
-        async Task CancelSubscription_Returns_StatusCode200_StatusCode404(string customerId, string softwareId, int statusCode )
+        async Task CancelSubscription_Returns_StatusCode200_StatusCode404(string customerId, string softwareId, int statusCode)
         {
             var mockContext = new Mock<CloudSalesSystemDbContext>(options);
 
@@ -312,7 +312,7 @@ namespace CloudSalesSystemTests
             )
             .Returns(() => genericResponse());
 
-         
+
             var mockFactory = new Mock<IHttpClientFactory>();
             var client = new HttpClient(handlerMock.Object);
             mockFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(client);

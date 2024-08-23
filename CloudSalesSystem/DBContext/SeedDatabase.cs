@@ -4,11 +4,12 @@ namespace CloudSalesSystem.DBContext
 {
     public static class SeedDatabase
     {
+        /// <summary>
+        /// Provides seed data for the database
+        /// </summary>
+        /// <param name="context">CloudSalesSystemDbContext object</param>
         public static void Initialize(CloudSalesSystemDbContext context)
         {
-            context.Database.EnsureCreated();
-
-
             var firstCustomer = new Customer
             {
                 CustomerId = new Guid("C4B63093-52F4-4EC3-B6B3-FDBE9C2B76D3"),

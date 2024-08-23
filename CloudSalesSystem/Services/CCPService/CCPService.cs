@@ -32,7 +32,7 @@ namespace CloudSalesSystem.Services.CCPService
         }
     
 
-        public async Task<HttpStatusCode> OrderSoftware(Guid customerId, Guid accountId, int ccpId)
+        public async Task<HttpStatusCode> OrderSoftwareLicence(Guid customerId, Guid accountId, int ccpId)
         {
             var services = await SoftwareServices();
             var softwareListCheck = Array.Find(services, (a => a.Id == ccpId));
@@ -73,7 +73,7 @@ namespace CloudSalesSystem.Services.CCPService
                 return httpResponse.StatusCode;
             }
 
-            var softwarePurchaseResponse = JsonSerializer.Deserialize<SoftwarePurchaseResponse>(httpResponseContent);
+            var softwarePurchaseResponse = JsonSerializer.Deserialize<OrderSoftwareLicenceResponse>(httpResponseContent);
 
             var softwareEntry = new Software()
             {
@@ -120,7 +120,7 @@ namespace CloudSalesSystem.Services.CCPService
             return HttpStatusCode.OK;
         }
 
-        public async Task<HttpStatusCode> ExtendSoftwareLicence(Guid customerId, Guid softwareId, int days)
+        public async Task<HttpStatusCode> ExtendSoftwareLicence(Guid customerId, Guid softwareId, int months)
         {
             var softwareEntity = await cloudSalesSystemDbContext.Softwares.FirstOrDefaultAsync(
             a => a.SoftwareId == softwareId &&
@@ -144,7 +144,7 @@ namespace CloudSalesSystem.Services.CCPService
                 return httpResponse.StatusCode;
             }
 
-            softwareEntity.ValidToDate = softwareEntity.ValidToDate.AddDays(days);
+            softwareEntity.ValidToDate = softwareEntity.ValidToDate.AddMonths(months);
 
             await cloudSalesSystemDbContext.SaveChangesAsync();
 

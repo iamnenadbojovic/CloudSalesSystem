@@ -25,7 +25,7 @@ namespace CloudSalesSystemTests
 
         protected static readonly Account account = new()
         {
-            CustomerId = new Guid("7D6ABF8E-6A2E-4606-9714-1175B7B4DE73"),
+            AccountId = new Guid("7D6ABF8E-6A2E-4606-9714-1175B7B4DE73"),
             Name = "Office Account",
             Customer = customer,
             CCPAccountId = "AAB63093-52F4-4EC3-B6B3-FDBE9C2B76D3"
