@@ -28,7 +28,7 @@ namespace CloudSalesSystem.Services.CCPService
             }
             var softwareServices = await response.Content.ReadFromJsonAsync<CCPSoftware[]>();
 
-            return softwareServices;
+            return softwareServices!;
         }
     
 

@@ -14,7 +14,7 @@ namespace CloudSalesSystem.Models
         public DateTime Created { get; set; }
 
         [JsonIgnore]
-        public Customer Customer { get; set; }
+        public Customer Customer { get; set; } = new Customer();
 
         [JsonIgnore]
         public ICollection<Software> SoftwareEntries { get; set; } = [];
