@@ -4,7 +4,7 @@ namespace CloudSalesSystem.Models
 {
     public class Account
     {
-        public Guid Id { get; set; }
+        public Guid AccountId { get; set; }
 
         public string? Name { get; set; }
 
@@ -14,7 +14,10 @@ namespace CloudSalesSystem.Models
         public DateTime Created { get; set; }
 
         [JsonIgnore]
-        public Customer Customer { get; set; } = new Customer();
+        public Customer Customer { get; set; }
+
+        [JsonIgnore]
+        public Guid CustomerId { get; set; }
 
         [JsonIgnore]
         public ICollection<Software> SoftwareEntries { get; set; } = [];

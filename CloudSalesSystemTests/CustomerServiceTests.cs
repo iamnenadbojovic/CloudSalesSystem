@@ -27,7 +27,7 @@ namespace CloudSalesSystemTests
 
             // Act
             var ccpService = new CustomerService(mockContext.Object);
-            var result = await ccpService.CustomerAccounts(customer.Id);
+            var result = await ccpService.CustomerAccounts(customer.CustomerId);
 
 
             // Assert

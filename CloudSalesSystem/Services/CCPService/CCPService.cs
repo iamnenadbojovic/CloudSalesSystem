@@ -43,8 +43,8 @@ namespace CloudSalesSystem.Services.CCPService
             }
  
             var accountEntry = await cloudSalesSystemDbContext.Accounts.FirstOrDefaultAsync(
-                a => a.Id == accountId
-                && a.Customer.Id == customerId);
+                a => a.AccountId == accountId
+                && a.Customer.CustomerId == customerId);
 
             if (accountEntry == null)
             {
@@ -52,8 +52,8 @@ namespace CloudSalesSystem.Services.CCPService
             }
 
             var softwareExists = await cloudSalesSystemDbContext.Softwares.FirstOrDefaultAsync(
-                a => a.Account.Id == accountId
-                && a.Account.Customer.Id == customerId && a.CCPID == ccpId);
+                a => a.Account.AccountId == accountId
+                && a.Account.Customer.CustomerId == customerId && a.CCPID == ccpId);
             if(softwareExists != null)
             {
                 return HttpStatusCode.Conflict;
@@ -93,8 +93,8 @@ namespace CloudSalesSystem.Services.CCPService
         public async Task<HttpStatusCode> CancelSubscription(Guid customerId, Guid softwareId)
         {
             var softwareEntity = await cloudSalesSystemDbContext.Softwares.FirstOrDefaultAsync(
-            a => a.Id == softwareId &&
-                a.Account.Customer.Id == customerId && a.State!="Cancelled");
+            a => a.SoftwareId == softwareId &&
+                a.Account.Customer.CustomerId == customerId && a.State!="Cancelled");
 
             if (softwareEntity == null)
             {
@@ -102,7 +102,7 @@ namespace CloudSalesSystem.Services.CCPService
             }
 
             using StringContent json = new(
-               JsonSerializer.Serialize(new { accountId =  softwareEntity.Account.Id }, jsonOptions),
+               JsonSerializer.Serialize(new { accountId =  softwareEntity.Account.AccountId }, jsonOptions),
                Encoding.UTF8,
                MediaTypeNames.Application.Json);
 
@@ -123,8 +123,8 @@ namespace CloudSalesSystem.Services.CCPService
         public async Task<HttpStatusCode> ExtendSoftwareLicence(Guid customerId, Guid softwareId, int days)
         {
             var softwareEntity = await cloudSalesSystemDbContext.Softwares.FirstOrDefaultAsync(
-            a => a.Id == softwareId &&
-                a.Account.Customer.Id == customerId && a.State!="Cancelled");
+            a => a.SoftwareId == softwareId &&
+                a.Account.Customer.CustomerId == customerId && a.State!="Cancelled");
 
             if (softwareEntity == null)
             {
@@ -132,7 +132,7 @@ namespace CloudSalesSystem.Services.CCPService
             }
 
             using StringContent json = new(
-              JsonSerializer.Serialize(new { accountId = softwareEntity.Account.Id }, jsonOptions),
+              JsonSerializer.Serialize(new { accountId = softwareEntity.Account.AccountId }, jsonOptions),
               Encoding.UTF8,
               MediaTypeNames.Application.Json);
 

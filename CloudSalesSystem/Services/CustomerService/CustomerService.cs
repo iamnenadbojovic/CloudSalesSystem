@@ -10,23 +10,23 @@ namespace CloudSalesSystem.Services.CCPService
     {
         public async Task<List<Account>> CustomerAccounts(Guid customerId)
         {
-            var result = await cloudSalesSystemDbContext.Accounts.Where(a => a.Customer.Id == customerId).ToListAsync();
+            var result = await cloudSalesSystemDbContext.Accounts.Where(a => a.Customer.CustomerId == customerId).ToListAsync();
             return result;
         }
 
         public async Task<List<Software>> PurchasedSoftware(Guid customerId, Guid accountId)
         {
             var result = await cloudSalesSystemDbContext.Softwares.Where(
-                a => a.Account.Id == accountId &&
-                a.Account.Customer.Id == customerId).ToListAsync();
+                a => a.Account.AccountId == accountId &&
+                a.Account.Customer.CustomerId == customerId).ToListAsync();
             return result;
         }
 
         public async Task<HttpStatusCode> UpdateLicenceQuantity(Guid customerId, Guid softwareId, int quantity)
         {
             var softwareEntity = await cloudSalesSystemDbContext.Softwares.FirstOrDefaultAsync(
-                a => a.Id == softwareId &&
-                a.Account.Customer.Id == customerId && a.State != "Cancelled");
+                a => a.SoftwareId == softwareId &&
+                a.Account.Customer.CustomerId == customerId && a.State != "Cancelled");
 
             if (softwareEntity == null)
             {

@@ -80,6 +80,15 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+Seed();
+void Seed()
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var scopedContext = scope.ServiceProvider.GetRequiredService<CloudSalesSystemDbContext>();
+        SeedDatabase.Initialize(scopedContext);
+    }
+}
 
 if (app.Environment.IsDevelopment())
 {

@@ -139,7 +139,7 @@ namespace CloudSalesSystemTests
 
             // Act
             var ccpService = new CCPService(mockContext.Object, mockFactory.Object);
-            var result = await ccpService.OrderSoftware(customer.Id, account.Id,ccpId:1);
+            var result = await ccpService.OrderSoftware(customer.CustomerId, account.AccountId,ccpId:1);
             var expectedResult = HttpStatusCode.OK;
 
             Assert.Equal(expectedResult, result);
