@@ -5,5 +5,4 @@
 
 using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>", Scope = "type", Target = "~T:CloudSalesSystem.Services.CCPService.CCPService")]
-[assembly: SuppressMessage("Blocker Vulnerability", "S6781:JWT secret keys should not be disclosed", Justification = "<Pending>", Scope = "member", Target = "~M:CloudSalesSystem.Services.LoginService.LoginService.Login(CloudSalesSystem.Models.Customer)~System.Threading.Tasks.Task{System.String}")]
 [assembly: SuppressMessage("Blocker Vulnerability", "S6781:JWT secret keys should not be disclosed", Justification = "<Pending>", Scope = "member", Target = "~M:CloudSalesSystem.Services.LoginService.LoginService.Login(CloudSalesSystem.Models.Credentials)~System.Threading.Tasks.Task{System.String}")]
