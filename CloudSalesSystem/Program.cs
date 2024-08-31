@@ -30,6 +30,11 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 builder.Services.AddTransient<ICurrentCustomerService, CurrentCustomerService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.Configure<RouteOptions>(options =>
+ {
+     options.LowercaseUrls = true;
+     options.LowercaseQueryStrings = true;
+ });
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
