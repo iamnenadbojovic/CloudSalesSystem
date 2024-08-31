@@ -68,7 +68,7 @@ namespace CloudSalesSystem.Controllers
 
         [Authorize]
         [HttpPost]
-        [Route("accounts/{accountId}/software-solutions/{ccpId}")]
+        [Route("accounts/{accountId}/services/{ccpId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -82,7 +82,7 @@ namespace CloudSalesSystem.Controllers
 
         [Authorize]
         [HttpGet]
-        [Route("accounts/{accountId}/software-licences")]
+        [Route("accounts/{accountId}/software")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<List<Software>>> PurchasedSoftware([FromRoute] Guid accountId)
@@ -100,7 +100,7 @@ namespace CloudSalesSystem.Controllers
 
         [Authorize]
         [HttpPut]
-        [Route("software-licences/{softwareId}/quantity")]
+        [Route("software/{softwareId}/quantity")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> UpdateQuantity([FromRoute] Guid softwareId, int quantity)
@@ -112,7 +112,7 @@ namespace CloudSalesSystem.Controllers
 
         [Authorize]
         [HttpDelete]
-        [Route("software-licences/{softwareId}")]
+        [Route("software/{softwareId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> CancelAccount([FromRoute] Guid softwareId)
@@ -124,7 +124,7 @@ namespace CloudSalesSystem.Controllers
 
         [Authorize]
         [HttpPut]
-        [Route("software-licences/{softwareId}/extend")]
+        [Route("software/{softwareId}/extend")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> ExtendLicence([FromRoute] Guid softwareId, int months)
