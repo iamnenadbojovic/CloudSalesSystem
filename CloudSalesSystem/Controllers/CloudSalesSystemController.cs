@@ -39,7 +39,7 @@ namespace CloudSalesSystem.Controllers
         public async Task<ActionResult<CCPSoftware[]>> SoftwareServices()
         {
             var softwareServices = await ccpService.SoftwareServices();
-            if(softwareServices == null || softwareServices.Length==0)
+            if (softwareServices == null || softwareServices.Length == 0)
             {
                 string message = "Not Found";
                 logger.LogError(message);
@@ -73,7 +73,7 @@ namespace CloudSalesSystem.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<ActionResult> OrderSoftwareLicence([FromRoute]Guid accountId, [FromRoute]int softwareId)
+        public async Task<ActionResult> OrderSoftwareLicence([FromRoute] Guid accountId, [FromRoute] int softwareId)
         {
             var customerId = currentCustomerService.CustomerId();
             var responseStatusCode = await ccpService.OrderSoftwareLicence(customerId, accountId, softwareId);
@@ -85,11 +85,11 @@ namespace CloudSalesSystem.Controllers
         [Route("accounts/{accountId}/software-licences")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<List<Software>>> PurchasedSoftware([FromRoute]Guid accountId)
+        public async Task<ActionResult<List<Software>>> PurchasedSoftware([FromRoute] Guid accountId)
         {
             var customerId = currentCustomerService.CustomerId();
             var response = await customerService.PurchasedSoftware(customerId, accountId);
-            if(response == null)
+            if (response == null)
             {
                 string message = "Not Found";
                 logger.LogError(message);
@@ -103,7 +103,7 @@ namespace CloudSalesSystem.Controllers
         [Route("software-licences/{softwareId}/quantity")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> UpdateQuantity([FromRoute]Guid softwareId, int quantity)
+        public async Task<ActionResult> UpdateQuantity([FromRoute] Guid softwareId, int quantity)
         {
             var customerId = currentCustomerService.CustomerId();
             var statusCode = await customerService.UpdateLicenceQuantity(customerId, softwareId, quantity);
@@ -115,7 +115,7 @@ namespace CloudSalesSystem.Controllers
         [Route("software-licences/{softwareId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> CancelAccount([FromRoute]Guid softwareId)
+        public async Task<ActionResult> CancelAccount([FromRoute] Guid softwareId)
         {
             var customerId = currentCustomerService.CustomerId();
             var statusCode = await ccpService.CancelSubscription(customerId, softwareId);
@@ -127,7 +127,7 @@ namespace CloudSalesSystem.Controllers
         [Route("software-licences/{softwareId}/extend")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> ExtendLicence([FromRoute]Guid softwareId, int months)
+        public async Task<ActionResult> ExtendLicence([FromRoute] Guid softwareId, int months)
         {
             var customerId = currentCustomerService.CustomerId();
             var statusCode = await ccpService.ExtendSoftwareLicence(customerId, softwareId, months);
