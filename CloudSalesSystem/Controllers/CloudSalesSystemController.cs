@@ -68,7 +68,7 @@ namespace CloudSalesSystem.Controllers
 
         [Authorize]
         [HttpPost]
-        [Route("accounts/{accountId}/software-licences/{softwareId}/order")]
+        [Route("accounts/{accountId}/software-licences/{softwareId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
