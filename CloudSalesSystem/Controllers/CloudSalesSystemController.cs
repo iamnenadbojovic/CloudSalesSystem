@@ -16,7 +16,7 @@ namespace CloudSalesSystem.Controllers
         ICustomerService customerService) : ControllerBase
     {
 
-        [HttpPost("Login")]
+        [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login(Credentials credentials)
         {
