@@ -68,15 +68,15 @@ namespace CloudSalesSystem.Controllers
 
         [Authorize]
         [HttpPost]
-        [Route("accounts/{accountId}/software-licences/{softwareId}")]
+        [Route("accounts/{accountId}/software/{ccpId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<ActionResult> OrderSoftwareLicence([FromRoute] Guid accountId, [FromRoute] int softwareId)
+        public async Task<ActionResult> OrderSoftwareLicence([FromRoute] Guid accountId, [FromRoute] int ccpId)
         {
             var customerId = currentCustomerService.CustomerId();
-            var responseStatusCode = await ccpService.OrderSoftwareLicence(customerId, accountId, softwareId);
+            var responseStatusCode = await ccpService.OrderSoftwareLicence(customerId, accountId, ccpId);
             return StatusCode((int)responseStatusCode);
         }
 
