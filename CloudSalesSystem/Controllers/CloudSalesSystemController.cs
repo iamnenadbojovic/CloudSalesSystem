@@ -100,7 +100,7 @@ namespace CloudSalesSystem.Controllers
 
         [Authorize]
         [HttpPut]
-        [Route("software-licences/{softwareId}")]
+        [Route("software-licences/{softwareId}/quantity")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> UpdateQuantity([FromRoute]Guid softwareId, int quantity)
