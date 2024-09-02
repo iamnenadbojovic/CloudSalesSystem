@@ -15,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddMockHttpClient();
-var connectionString = builder.Configuration.GetConnectionString("CloudSalesSytem");
+var connectionString = builder.Configuration.GetConnectionString("CloudSalesSystem");
 
 builder.Services.AddDbContext<CloudSalesSystemDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddScoped<ILoginService, LoginService>();
@@ -40,7 +40,7 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "CloudSalesSytem",
+        Title = "CloudSalesSystem",
         Version = "v1"
     });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
