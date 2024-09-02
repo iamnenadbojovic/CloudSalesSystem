@@ -1,16 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CloudSalesSystem.DBContext;
+using Microsoft.EntityFrameworkCore;
 
 namespace CloudSalesSystem.Migrations
 {
     public static class MigrationEntry
     {
-        public static void ApplyMigration<TDbContext>(IServiceScope scope)
-        where TDbContext : DbContext
+        public static WebApplication ApplyMigration(this WebApplication app)
         {
-            using TDbContext context = scope.ServiceProvider
-                .GetRequiredService<TDbContext>();
-
-            context.Database.Migrate();
+            using var scope = app.Services.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<CloudSalesSystemDbContext>();
+            db.Database.Migrate();
+            return app;
         }
     }
 }

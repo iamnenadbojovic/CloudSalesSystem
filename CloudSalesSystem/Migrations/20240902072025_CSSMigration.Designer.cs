@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CloudSalesSystem.Migrations
 {
     [DbContext(typeof(CloudSalesSystemDbContext))]
-    [Migration("20240823061206_CloudSalesSystemMigration")]
-    partial class CloudSalesSystemMigration
+    [Migration("20240902072025_CSSMigration")]
+    partial class CSSMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,7 +27,7 @@ namespace CloudSalesSystem.Migrations
 
             modelBuilder.Entity("CloudSalesSystem.Models.Account", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("AccountId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -43,7 +43,7 @@ namespace CloudSalesSystem.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("AccountId");
 
                     b.HasIndex("CustomerId");
 
@@ -52,7 +52,7 @@ namespace CloudSalesSystem.Migrations
 
             modelBuilder.Entity("CloudSalesSystem.Models.Customer", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("CustomerId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -68,14 +68,14 @@ namespace CloudSalesSystem.Migrations
                     b.Property<string>("Username")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("CustomerId");
 
                     b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("CloudSalesSystem.Models.Software", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("SoftwareId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -99,7 +99,7 @@ namespace CloudSalesSystem.Migrations
                     b.Property<DateTime>("ValidToDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
+                    b.HasKey("SoftwareId");
 
                     b.HasIndex("AccountId");
 

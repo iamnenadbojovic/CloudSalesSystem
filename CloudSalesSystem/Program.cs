@@ -1,6 +1,7 @@
 using CloudSalesSystem.DBContext;
 using CloudSalesSystem.HelperClasses;
 using CloudSalesSystem.Interfaces;
+using CloudSalesSystem.Migrations;
 using CloudSalesSystem.Services.CCPService;
 using CloudSalesSystem.Services.CurrentCustomerService;
 using CloudSalesSystem.Services.LoginService;
@@ -85,6 +86,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+app.ApplyMigration();
 using (var scope = app.Services.CreateScope())
     {
         var scopedContext = scope.ServiceProvider.GetRequiredService<CloudSalesSystemDbContext>();

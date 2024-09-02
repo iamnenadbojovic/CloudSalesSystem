@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CloudSalesSystem.Migrations
 {
     /// <inheritdoc />
-    public partial class CloudSalesSystemMigration : Migration
+    public partial class CSSMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,10 +16,10 @@ namespace CloudSalesSystem.Migrations
                 columns: table => new
                 {
                     CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Created = table.Column<DateTime>(type: "date", nullable: false, defaultValue: "GETDATE()"),
-                    Email = table.Column<string>(type: "nvarchar(32)", nullable: true),
-                    Username = table.Column<string>(type: "nvarchar(32)", nullable: true),
-                    Password = table.Column<string>(type: "nvarchar(32)", nullable: true)
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Username = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -30,15 +30,15 @@ namespace CloudSalesSystem.Migrations
                 name: "Accounts",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(32)", nullable: true),
-                    CCPAccountId = table.Column<string>(type: "nvarchar(32)", nullable: true),
-                    Created = table.Column<DateTime>(type: "date", nullable: false, defaultValue: "GETDATE()"),
+                    AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CCPAccountId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Accounts", x => x.Id);
+                    table.PrimaryKey("PK_Accounts", x => x.AccountId);
                     table.ForeignKey(
                         name: "FK_Accounts_Customers_CustomerId",
                         column: x => x.CustomerId,
@@ -52,11 +52,11 @@ namespace CloudSalesSystem.Migrations
                 columns: table => new
                 {
                     SoftwareId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(32)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CCPID = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
-                    State = table.Column<string>(type: "nvarchar(32)", nullable: false),
-                    ValidToDate = table.Column<DateTime>(type: "date", nullable: false,defaultValue: "GETDATE()"),
+                    State = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ValidToDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
